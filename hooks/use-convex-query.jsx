@@ -44,6 +44,7 @@ export const useConvexMutation = (mutation) => {
         try {
             const response = await mutationFn(...args)
             setData(response)
+            return response
         } catch (err) {
             setError(err)
             toast.error(err.message)

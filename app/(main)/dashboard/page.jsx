@@ -7,6 +7,7 @@ import { Plus, Star } from "lucide-react"
 import { BarLoader } from "react-spinners"
 import NewProjectModal from "./_components/NewProjectModal"
 import { useState } from "react"
+import ProjectGrid from "./_components/ProjectGrid"
 
 const Dashboard = () => {
     const {data: projects, loading} = useConvexQuery(api.projects.getUserProjects)
@@ -21,7 +22,10 @@ const Dashboard = () => {
                 </div>
                 <Button onClick={() => setShowAddProjectModal(true)}><Plus/>New Project</Button>
             </div>     
-            {loading ? <BarLoader width={'100%'} color='white'/> : projects && projects.length > 0 ? (<></>) : 
+            {loading ? <BarLoader width={'100%'} color='white'/> : projects && projects.length > 0 ? 
+            (<>
+                <ProjectGrid projects={projects} />
+            </>) : 
                     (
                         <div className='flex flex-col gap-4 items-center border-1 border-white mt-12 py-4'>
                             <p>Upload an image to start creating magic.</p>

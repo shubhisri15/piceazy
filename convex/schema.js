@@ -28,7 +28,7 @@ export default defineSchema({
         thumbnailUrl: v.optional(v.string()),
         activeTransformations: v.optional(v.string()),
         backgroundRemoved: v.optional(v.boolean()),
-        folderId: v.id('folders'),
+        folderId: v.optional(v.id('folders')),
         createdAt: v.number(),
         updatedAt: v.number()
     }).index('by_user', ['userId']).index("by_user_updated", ["userId", "updatedAt"]).index('by_folder', ['folderId']),

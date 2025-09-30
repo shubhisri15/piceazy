@@ -16,7 +16,7 @@ export const create = mutation({
     handler: async (ctx, args) => {
         const user = await fetchCurrentUser(ctx);
 
-        await ctx.db.insert('projects', {
+        const projectId = await ctx.db.insert('projects', {
             title: args.title,
             userId: user._id,
             canvasState: args.canvasState,
@@ -65,8 +65,7 @@ export const deleteProject = mutation({
         await ctx.db.delete(args.projectId)
         await ctx.db.patch(user._id, {
             projects: Math.max(0, user.projects - 1),
-            lastUpdatedAt: Date.now()
+            updatedAt: Date.now()
         })
-
     }
 })

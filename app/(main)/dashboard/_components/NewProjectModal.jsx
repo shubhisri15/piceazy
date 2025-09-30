@@ -13,8 +13,10 @@ import { api } from "@/convex/_generated/api"
 import { useConvexMutation } from "@/hooks/use-convex-query"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { ImageIcon, Loader, Upload, X } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
+import { toast } from "sonner"
 
 const NewProjectModal = ({ isOpen, onClose }) => {
     const [uploading, setUploading] = useState(false)
@@ -23,6 +25,8 @@ const NewProjectModal = ({ isOpen, onClose }) => {
     const [previewUrl, setPreviewUrl] = useState(null)
 
     const { mutate: createProject } = useConvexMutation(api.projects.create)
+
+    const router = useRouter()
 
     const onDrop = useCallback((acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -53,8 +57,48 @@ const NewProjectModal = ({ isOpen, onClose }) => {
         onClose()
     }
 
-    const handleCreateProject = () => {
-        onClose()
+    const handleCreateProject = async () => {
+        if (!selectedFile || !projectTitle.trim()) {
+            toast.error('Please select an image and add a project title')
+            return
+        }
+
+        setUploading(true)
+
+        try {
+            const formData = new FormData()
+            formData.append('file', selectedFile)
+            formData.append('fileName', selectedFile.name)
+
+            const uploadResponse = await fetch('/api/imagekit/upload', {
+                method: 'POST',
+                body: formData
+            })
+
+            const uploadData = await uploadResponse.json()
+
+            const projectId = await createProject({
+                title: projectTitle.trim(),
+                originalImageUrl: uploadData.url,
+                currentImageUrl: uploadData.url,
+                thumbnailUrl: uploadData.thumbnailUrl,
+                width: uploadData.width || 800,
+                height: uploadData.height || 600,
+                canvasState: null
+            })
+
+            console.log(uploadResponse)
+            console.log(projectId)
+
+            toast.success('Project created successfully')
+            router.push(`/editor/${projectId}`)
+
+        } catch (error) {
+            console.error('Error creating new project: ', error)
+            toast.error(error.message || 'Something went wrong, please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
 
     return (
