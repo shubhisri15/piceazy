@@ -3,9 +3,11 @@
 import { CanvasContext } from "@/context/context"
 import { api } from "@/convex/_generated/api"
 import { useConvexQuery } from "@/hooks/use-convex-query"
-import { Monitor } from "lucide-react"
+import { EditIcon, Monitor } from "lucide-react"
 import { useState } from "react"
 import CanvasEditor from "./_components/Canvas"
+import EditorSideNav from "./_components/EditorSideNav"
+import EditorTopNav from "./_components/EditorTopNav"
 
 const { useParams } = require("next/navigation")
 
@@ -71,10 +73,10 @@ const Editor = () => {
                         </div>
                     )}
                     {/* Top Bar */}
-
+                    <EditorTopNav project={project} />
                     <div className='flex flex-1 overflow-hidden'>
                         {/* Side Nav */}
-
+                        <EditorSideNav project={project}/>
                         <div className='flex-1'>
                             {/* Canvas */}
                             <CanvasEditor project={project}/>
