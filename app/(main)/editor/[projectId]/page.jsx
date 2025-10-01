@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api"
 import { useConvexQuery } from "@/hooks/use-convex-query"
 import { Monitor } from "lucide-react"
 import { useState } from "react"
-import Canvas from "./_components/Canvas"
+import CanvasEditor from "./_components/Canvas"
 
 const { useParams } = require("next/navigation")
 
@@ -77,13 +77,12 @@ const Editor = () => {
 
                         <div className='flex-1'>
                             {/* Canvas */}
-                            <Canvas />
+                            <CanvasEditor project={project}/>
                         </div>
                     </div>
 
                     
                 </div>
-                Editor: {projectId}
             </div>
         </CanvasContext.Provider>
     )
